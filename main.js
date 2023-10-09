@@ -57,7 +57,7 @@ do {
                 break;
             }
 
-            volIng = Number(prompt(`Favor ingresar el volumen comprometido por ${razonSocial}`));
+            volIng = Number(prompt(`Favor ingresar la cantidad de pedidos comprometidos por ${razonSocial}`));
             let tipoEmpresa = clasificar(volIng);
             let valorTarifa = calcularTarifaNeta(tipoEmpresa);
             alert(`El tarifario asignado a ${razonSocial} es de $${valorTarifa} CLP + IVA`);
@@ -68,9 +68,9 @@ do {
                 alert(`                
                     Total Pedidos: ${volIng}
                     Tipo de Cliente: ${clasificar(volIng)}
-                    Tarifario Asignado: $${calcularTarifaNeta(clasificar(volIng))} CLP
+                    Tarifario Asignado: $${calcularTarifaNeta(clasificar(volIng))} CLP + IVA
 
-                    Proyección de Facturación: $${calcularFacturacion(volIng,calcularTarifaNeta(clasificar(volIng)))} CLP
+                    Proyección de Facturación: $${calcularFacturacion(volIng,calcularTarifaNeta(clasificar(volIng)))} CLP (IVA Incluido)
                 `);
             } else {
                 alert(`Para revisar la facturación, es necesario que los datos fiscales y el tarifario sean completados primero`);
