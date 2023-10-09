@@ -22,7 +22,8 @@ do {
         2.- Representante Legal | ${repLegal}
         3.- Tarifario | ${tarifa}
         4.- Facturación
-        5.- Salir
+        5.- Finalizar Registro
+        6.- Salir
 
     Favor ingrese una opción
     `);
@@ -78,6 +79,27 @@ do {
             }
             break;
         case "5":
+            /*SIMULAMOS EL NUEVO REGISTRO EN LA BASE DE DATOS DEL CLIENTE*/
+            if (datosFiscales==false || repLegal==false || tarifa==false) {
+                alert(`Para finalizar el registro se deben ingresar: 
+                
+                    (a) Datos Fiscales
+                    (b) Representante Legal
+                    (c) Tarifario
+
+                `);
+                break;
+            }
+
+            datosFiscales=false;
+            repLegal=false;
+            tarifa=false;
+            salir=false;
+            razonSocial="";
+            volIng=0;
+            alert(`Nuevo Cliente Registrado con Éxito!`);
+            break;
+        case "6":
             salir=true;
             alert(`Hasta pronto!`);
             break;
