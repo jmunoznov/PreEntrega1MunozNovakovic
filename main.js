@@ -11,7 +11,6 @@ alert(`por lo que la experiencia de usuario, no será la mejor, pero ten fé que
 let datosFiscales=false;
 let repLegal=false;
 let tarifa=false;
-let factura=false;
 let salir=false;
 let razonSocial="";
 let volIng=0;
@@ -22,7 +21,7 @@ do {
         1.- Datos Fiscales | ${datosFiscales}
         2.- Representante Legal | ${repLegal}
         3.- Tarifario | ${tarifa}
-        4.- Facturación | ${factura}
+        4.- Facturación
         5.- Salir
 
     Favor ingrese una opción
