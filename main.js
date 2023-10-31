@@ -1,103 +1,152 @@
-/*DECLARACIÓN DE CONSTANTES*/
+//if (isNaN(Number("aaaa"))) {
+//  console.log(true);
+//else {
+//  console.log(false);
+//
+
+///*DECLARACIÓN DE CONSTANTES*/
 const iva = 0.19;
 const tarifaBase = 3500;
 
-alert("Bienvenido a mi portal");
+//alert("Bienvenido a mi portal");
 
-let nombre = prompt("favor ingresar tu nombre");
-alert(`${nombre}, estamos en nuestra primera etapa de desarrollo del sitio`)
-alert(`por lo que la experiencia de usuario, no será la mejor, pero ten fé que todo mejorará!`)
+//let nombre = prompt("favor ingresar tu nombre");
+//alert(`${nombre}, estamos en nuestra segunda etapa de desarrollo del sitio, por lo que la experiencia de usuario, no será la mejor, pero ten fé que todo mejorará! `)
 
-let datosFiscales=false;
-let repLegal=false;
-let tarifa=false;
 let salir=false;
-let razonSocial="";
-let volIng=0;
+let empresaCreada=false;
+const empresas=[];
+
+class Empresa {
+    constructor(info) {
+        this.rut = info.rut;
+        this.razonSocial = info.razonSocial;
+        //this.nombreFantasia = info.nombreFantasia;
+        this.giroComercial = info.giroComercial;
+        this.direccion = info.direccion;
+        this.run = info.run;
+        this.nombreRepLegal = info.nombreRepLegal;
+        this.contacto = info.contacto;
+        this.volumen = info.volumen;
+        this.tipoEmpresa = clasificar(this.volumen);
+        this.tarifa = calcularTarifaNeta(this.tipoEmpresa);
+        this.estado = "Activo";
+    }
+
+    bloquear() {
+        this.estado="Bloqueado";
+    }
+    desBloquear() {
+        this.estado="Activo";
+    }
+}
+
+//Propuesta de Menú Inicial - Por Mejorar
+//1.- Registrar Nuevo Cliente
+//2.- Modificar información de Clientes Actuales
+//3.- Facturación
+//4.- Habilitar/Deshabilitar Cliente(s)
+//5.- Salir
 
 do {
-    let op=prompt(`Registro de Nuevo Cliente | LogisticaJMN
+    let op=prompt(`Clients Managements | LogisticaJMN
 
-        1.- Datos Fiscales | ${datosFiscales}
-        2.- Representante Legal | ${repLegal}
-        3.- Tarifario | ${tarifa}
-        4.- Facturación
-        5.- Finalizar Registro
+        1.- Registrar Nuevo Cliente
+        2.- Ver información de Cliente(s)
+        3.- Proyección de Facturación
+        4.- Habilitar/Deshabilitar Cliente(s)
+        5.- Eliminar Clientes
         6.- Salir
 
     Favor ingrese una opción
     `);
 
+    let listadoEmpresas = "";
     switch (op) {
         case "1":
-            if (datosFiscales==false) {
-                let rut = prompt("Favor ingresar el rut de la empresa");
-                razonSocial = prompt("Favor ingresar Razón Social de la empresa");
-                datosFiscales=true;
-            } else {
-                alert(`Los datos fiscales de ${razonSocial} ya fueron ingresados`);
-            }
+            const nuevaEmpresa = new Empresa(
+                {
+                    rut: prompt("Favor ingresar el rut de la empresa"),
+                    razonSocial: prompt("Favor ingresar razón social de la empresa"),
+                    giroComercial: prompt("Favor ingresar el giro comercial de la empresa"),
+                    direccion: prompt("Favor ingresar dirección de la empresa"),
+                    run: prompt("Favor ingresar el run del representante legal"),
+                    nombreRepLegal: prompt("Favor ingresar el nombre del representante legal"),
+                    contacto: prompt("Favor ingresar el número de contacto del representante legal"),
+                    volumen: prompt("Favor ingresar el volumen diario de pedidos a procesar por LogísticaJMN")
+                }
+            )
+            empresas.push(nuevaEmpresa);
+            empresaCreada=true;
             break;
         case "2":
-            if (datosFiscales==false) {
-                alert(`Los datos fiscales deben ser ingresados priemro`);
+            if (empresaCreada==false) {
+                alert(`Favor registrar al menos un cliente`);
                 break;
             }
+            listadoEmpresas = "";
 
-            if (repLegal==false) {
-                let runRepLegal = prompt(`Favor ingresar el run del Rep. Legal de ${razonSocial}`);
-                let nomRepLegal = prompt(`Favor ingresar el nombre del Rep. Legal de ${razonSocial}`);
-                repLegal=true;
-            } else {
-                alert(`Los datos del representante legal de ${razonSocial}, ya fueron ingresados`);
+            for (let index=0; index<empresas.length; index++){
+                listadoEmpresas = listadoEmpresas + "\n" + (index+1) + ".- " + "RUT: " + empresas[index].rut + " Razón Social: " + empresas[index].razonSocial + " Estado: " + empresas[index].estado;
             }
+            alert(`Empresas registradas: \n\n${listadoEmpresas}`);
             break;
         case "3":
-            if (datosFiscales==false) {
-                alert(`Los datos fiscales deben ser ingresados priemro`);
+            if (empresaCreada==false) {
+                alert(`Favor registrar al menos un cliente`);
                 break;
             }
-
-            volIng = Number(prompt(`Favor ingresar la cantidad de pedidos comprometidos por ${razonSocial}`));
-            let tipoEmpresa = clasificar(volIng);
-            let valorTarifa = calcularTarifaNeta(tipoEmpresa);
-            alert(`El tarifario asignado a ${razonSocial} es de $${valorTarifa} CLP + IVA`);
-            tarifa=true;
+            const empresasFiltradas = empresas.filter((item) => item.estado=="Activo");
+            const totalFacturacion = empresasFiltradas.reduce((acum,item) => acum + (item.tarifa * item.volumen), 0);
+            const totalClientes = empresasFiltradas.length;
+            alert(`La proyección de facturación con ${totalClientes} cliente(s) registrado(s) y habilitado(s), es de: $${totalFacturacion} + IVA`);
             break;
         case "4":
-            if (datosFiscales==true && tarifa==true) {
-                alert(`                
-                    Total Pedidos: ${volIng}
-                    Tipo de Cliente: ${clasificar(volIng)}
-                    Tarifario Asignado: $${calcularTarifaNeta(clasificar(volIng))} CLP + IVA
-
-                    Proyección de Facturación: $${calcularFacturacion(volIng,calcularTarifaNeta(clasificar(volIng)))} CLP (IVA Incluido)
-                `);
-            } else {
-                alert(`Para revisar la facturación, es necesario que los datos fiscales y el tarifario sean completados primero`);
+            if (empresaCreada==false) {
+                alert(`Favor registrar al menos un cliente`);
                 break;
+            }
+            listadoEmpresas = "";
+
+            for (let index=0; index<empresas.length; index++){
+                listadoEmpresas = listadoEmpresas + "\n" + (index+1) + ".- " + empresas[index].razonSocial;
+            }
+            let nombreEmpresa = prompt(`Empresas registradas: \n${listadoEmpresas} \n\nFavor ingrese la empresa que desea habilitar/deshabilitar en el sistema`);
+            const findEmpresa = empresas.find((item) => item.razonSocial === nombreEmpresa);
+            if (findEmpresa) {
+                const listaEmpresas = empresas.map((item) => item.razonSocial);
+                let index = listaEmpresas.indexOf(findEmpresa.razonSocial);
+                if (findEmpresa.estado=="Activo") {
+                    empresas[index].bloquear();
+                    alert(`Empresa ${findEmpresa.razonSocial} ha sido bloqueada`);
+                } else {
+                    empresas[index].desBloquear();
+                    alert(`Empresa ${findEmpresa.razonSocial} ha sido desbloqueada`);
+                }
+            } else {
+                alert("Empresa no encontrada");
             }
             break;
         case "5":
-            /*SIMULAMOS EL NUEVO REGISTRO EN LA BASE DE DATOS DEL CLIENTE*/
-            if (datosFiscales==false || repLegal==false || tarifa==false) {
-                alert(`Para finalizar el registro se deben ingresar: 
-                
-                    (a) Datos Fiscales
-                    (b) Representante Legal
-                    (c) Tarifario
-
-                `);
+            if (empresaCreada==false) {
+                alert(`Favor registrar al menos un cliente`);
                 break;
             }
+            listadoEmpresas = "";
 
-            datosFiscales=false;
-            repLegal=false;
-            tarifa=false;
-            salir=false;
-            razonSocial="";
-            volIng=0;
-            alert(`Nuevo Cliente Registrado con Éxito!`);
+            for (let index=0; index<empresas.length; index++){
+                listadoEmpresas = listadoEmpresas + "\n" + (index+1) + ".- " + empresas[index].razonSocial;
+            }
+            let eliminarEmpresa = prompt(`Empresas registradas: \n${listadoEmpresas} \n\nFavor ingrese la empresa que desea elimar del sistema`);
+            const existeEmpresa = empresas.find((item) => item.razonSocial === eliminarEmpresa);
+            if (existeEmpresa) {
+                const listaEmpresas = empresas.map((item) => item.razonSocial);
+                let index = listaEmpresas.indexOf(existeEmpresa.razonSocial);
+                empresas.splice(index,1);
+                alert(`Empresa ${existeEmpresa.razonSocial} fue eliminada con éxito de la base de datos`);
+            } else {
+                alert("Empresa no encontrada");
+            }
             break;
         case "6":
             salir=true;
@@ -106,8 +155,9 @@ do {
         default:
             alert(`Opción Ingresada NO es válida!, intentalo de nuevo`);
             break;
-    }
+    } 
 } while (salir==false);
+
 
 
 /*FUNCIONES DEL CÓDIGO*/
@@ -153,6 +203,6 @@ function calcularTarifaNeta(tipoCliente) {
     }
 }
 
-function calcularFacturacion(volumen, tarifaAsig) {
-    return (volumen*tarifaAsig)*(1+iva);
+function tarifaIvaIncluido(tarifaBase) {
+    return tarifaBase * (1 + iva);
 }
