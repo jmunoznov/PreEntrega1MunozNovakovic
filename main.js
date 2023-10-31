@@ -73,7 +73,7 @@ do {
                     run: prompt("Favor ingresar el run del representante legal"),
                     nombreRepLegal: prompt("Favor ingresar el nombre del representante legal"),
                     contacto: prompt("Favor ingresar el número de contacto del representante legal"),
-                    volumen: prompt("Favor ingresar el volumen diario de pedidos a procesar por LogísticaJMN")
+                    volumen: prompt("Favor ingresar el volumen comprometido de pedidos a procesar al mes por LogísticaJMN")
                 }
             )
             empresas.push(nuevaEmpresa);
@@ -87,7 +87,7 @@ do {
             listadoEmpresas = "";
 
             for (let index=0; index<empresas.length; index++){
-                listadoEmpresas = listadoEmpresas + "\n" + (index+1) + ".- " + "RUT: " + empresas[index].rut + " Razón Social: " + empresas[index].razonSocial + " Estado: " + empresas[index].estado;
+                listadoEmpresas = listadoEmpresas + "\n" + (index+1) + ".- " + "RUT: " + empresas[index].rut + " | Razón Social: " + empresas[index].razonSocial + " | Estado: " + empresas[index].estado;
             }
             alert(`Empresas registradas: \n\n${listadoEmpresas}`);
             break;
