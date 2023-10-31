@@ -147,6 +147,10 @@ do {
             } else {
                 alert("Empresa no encontrada");
             }
+
+            if (empresas.length==0) {
+                empresaCreada = false;
+            }
             break;
         case "6":
             salir=true;
