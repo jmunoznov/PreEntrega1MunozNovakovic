@@ -1,28 +1,20 @@
-//if (isNaN(Number("aaaa"))) {
-//  console.log(true);
-//else {
-//  console.log(false);
-//
-
-///*DECLARACIÓN DE CONSTANTES*/
+//CONSTANTES DEL PROYECTO
 const iva = 0.19;
 const tarifaBase = 3500;
 
-//alert("Bienvenido a mi portal");
-
-//let nombre = prompt("favor ingresar tu nombre");
-//alert(`${nombre}, estamos en nuestra segunda etapa de desarrollo del sitio, por lo que la experiencia de usuario, no será la mejor, pero ten fé que todo mejorará! `)
-
-let salir=false;
-let empresaCreada=false;
-const empresas=[];
+//DECLARACIÓN DE OBJETOS
+class Usuario {
+    constructor(info) {
+        this.usuario = info.usuario;
+        this.clave = info.clave;
+    }
+}
 
 class Empresa {
     constructor(info) {
         this.rut = info.rut;
         this.razonSocial = info.razonSocial;
-        //this.nombreFantasia = info.nombreFantasia;
-        this.giroComercial = info.giroComercial;
+        this.industria = info.industria;
         this.direccion = info.direccion;
         this.run = info.run;
         this.nombreRepLegal = info.nombreRepLegal;
@@ -32,7 +24,6 @@ class Empresa {
         this.tarifa = calcularTarifaNeta(this.tipoEmpresa);
         this.estado = "Activo";
     }
-
     bloquear() {
         this.estado="Bloqueado";
     }
@@ -41,130 +32,134 @@ class Empresa {
     }
 }
 
-//Propuesta de Menú Inicial - Por Mejorar
-//1.- Registrar Nuevo Cliente
-//2.- Modificar información de Clientes Actuales
-//3.- Facturación
-//4.- Habilitar/Deshabilitar Cliente(s)
-//5.- Salir
+//GENERAR UN LOCAL STORAGE PARA SIMULAR "CUENTAS" DE USUARIO DEL SISTEMA...shhh, esto no ocurrió! jejeje
+localStorage.clear();
+const usuarios = [
+    { id:1, usuario: "jmunozn", nombre: "Jorge Muñoz N.", clave: "5237"},
+    { id:2, usuario: "avelasquez", nombre: "Andrés Velásquez", cclave: "5237"},
+    { id:3, usuario: "eachar", nombre: "Emanuel Achar", cclave: "5237"},
+];
+localStorage.setItem("usuarios", JSON.stringify(usuarios));
 
-do {
-    let op=prompt(`Clients Managements | LogisticaJMN
+const arregloEmpresas = [
+    { 
+        rut:"16.207.549-7", 
+        razonSocial: "Kokuko SPA", 
+        industria: "Tecnología (Electrónica)", 
+        direccion: "Fray Camilo Henríquez 660, Bodega 1119, Santiago, Santiago, RM",
+        run: "16.207.549-7",
+        nombreRepLegal: "Jorge Muñoz N.",
+        contacto: "979662315",
+        volumen: 2800,
+        tipoEmpresa: clasificar(2800),
+        tarifa: calcularTarifaNeta(clasificar(2800)),
+        estado: "Activo"
+    },
 
-        1.- Registrar Nuevo Cliente
-        2.- Ver información de Cliente(s)
-        3.- Proyección de Facturación
-        4.- Habilitar/Deshabilitar Cliente(s)
-        5.- Eliminar Clientes
-        6.- Salir
+    { 
+        rut:"7.361.220-9", 
+        razonSocial: "Lussani SPA", 
+        industria: "Alimento & Bebidas", 
+        direccion: "Guardi 8980, Bodega V7, Peñalolen, Santiago, RM",
+        run: "7.361.220-9",
+        nombreRepLegal: "Luis Muñoz Firinguetti",
+        contacto: "992256721",
+        volumen: 4500,
+        tipoEmpresa: clasificar(4500),
+        tarifa: calcularTarifaNeta(clasificar(4500)),
+        estado: "Activo"
+    },
+];
+localStorage.setItem("empresas", JSON.stringify(arregloEmpresas));
 
-    Favor ingrese una opción
-    `);
+let usuarioAlmacenados;
+let sesionIniciada;
+let usuario;
+let empresas;
 
-    let listadoEmpresas = "";
-    switch (op) {
-        case "1":
-            const nuevaEmpresa = new Empresa(
-                {
-                    rut: prompt("Favor ingresar el rut de la empresa"),
-                    razonSocial: prompt("Favor ingresar razón social de la empresa"),
-                    giroComercial: prompt("Favor ingresar el giro comercial de la empresa"),
-                    direccion: prompt("Favor ingresar dirección de la empresa"),
-                    run: prompt("Favor ingresar el run del representante legal"),
-                    nombreRepLegal: prompt("Favor ingresar el nombre del representante legal"),
-                    contacto: prompt("Favor ingresar el número de contacto del representante legal"),
-                    volumen: prompt("Favor ingresar el volumen comprometido de pedidos a procesar al mes por LogísticaJMN")
-                }
-            )
-            empresas.push(nuevaEmpresa);
-            empresaCreada=true;
-            break;
-        case "2":
-            if (empresaCreada==false) {
-                alert(`Favor registrar al menos un cliente`);
-                break;
-            }
-            listadoEmpresas = "";
+//Traemos los usuarios almacenados y la sesión iniciada
+usuarioAlmacenados = JSON.parse(localStorage.getItem("usuarios"));
+sesionIniciada = sessionStorage.getItem("usuario");
+console.log(usuarioAlmacenados);
+console.log(sesionIniciada);
 
-            for (let index=0; index<empresas.length; index++){
-                listadoEmpresas = listadoEmpresas + "\n" + (index+1) + ".- " + "RUT: " + empresas[index].rut + " | Razón Social: " + empresas[index].razonSocial + " | Estado: " + empresas[index].estado;
-            }
-            alert(`Empresas registradas: \n\n${listadoEmpresas}`);
-            break;
-        case "3":
-            if (empresaCreada==false) {
-                alert(`Favor registrar al menos un cliente`);
-                break;
-            }
-            const empresasFiltradas = empresas.filter((item) => item.estado=="Activo");
-            const totalFacturacion = empresasFiltradas.reduce((acum,item) => acum + (item.tarifa * item.volumen), 0);
-            const totalClientes = empresasFiltradas.length;
-            alert(`La proyección de facturación con ${totalClientes} cliente(s) registrado(s) y habilitado(s), es de: $${totalFacturacion} + IVA`);
-            break;
-        case "4":
-            if (empresaCreada==false) {
-                alert(`Favor registrar al menos un cliente`);
-                break;
-            }
-            listadoEmpresas = "";
+if (sesionIniciada) {
+    usuario = sesionIniciada;
+    const logUser = usuarioAlmacenados.find((item) => item.usuario === usuario);
+    let saludo = document.getElementById("saludo");
+    saludo.innerHTML=`Bienvenid@ ${logUser.nombre}`;
+} else {
+    usuario = prompt("Ingrese Usuario");
+    const logUser = usuarioAlmacenados.find((item) => item.usuario === usuario);
+    console.log(logUser);
+    if (logUser !== undefined) {
+        let saludo = document.getElementById("saludo");
+        saludo.innerHTML=`Bienvenid@ ${logUser.nombre}`;
+        sessionStorage.setItem("usuario",logUser.usuario);
+    } else {
+        let formulario = document.getElementById("main");
+        formulario.remove();
+        let saludo = document.getElementById("saludo");
+        saludo.innerHTML=`NO TIENES PERMISO PARA ACCEDER ${usuario}!, GO AWAY!`;
+    };
+};
 
-            for (let index=0; index<empresas.length; index++){
-                listadoEmpresas = listadoEmpresas + "\n" + (index+1) + ".- " + empresas[index].razonSocial;
-            }
-            let nombreEmpresa = prompt(`Empresas registradas: \n${listadoEmpresas} \n\nFavor ingrese la empresa que desea habilitar/deshabilitar en el sistema`);
-            const findEmpresa = empresas.find((item) => item.razonSocial === nombreEmpresa);
-            if (findEmpresa) {
-                const listaEmpresas = empresas.map((item) => item.razonSocial);
-                let index = listaEmpresas.indexOf(findEmpresa.razonSocial);
-                if (findEmpresa.estado=="Activo") {
-                    empresas[index].bloquear();
-                    alert(`Empresa ${findEmpresa.razonSocial} ha sido bloqueada`);
-                } else {
-                    empresas[index].desBloquear();
-                    alert(`Empresa ${findEmpresa.razonSocial} ha sido desbloqueada`);
-                }
-            } else {
-                alert("Empresa no encontrada");
-            }
-            break;
-        case "5":
-            if (empresaCreada==false) {
-                alert(`Favor registrar al menos un cliente`);
-                break;
-            }
-            listadoEmpresas = "";
+empresas = JSON.parse(localStorage.getItem("empresas"));
 
-            for (let index=0; index<empresas.length; index++){
-                listadoEmpresas = listadoEmpresas + "\n" + (index+1) + ".- " + empresas[index].razonSocial;
-            }
-            let eliminarEmpresa = prompt(`Empresas registradas: \n${listadoEmpresas} \n\nFavor ingrese la empresa que desea elimar del sistema`);
-            const existeEmpresa = empresas.find((item) => item.razonSocial === eliminarEmpresa);
-            if (existeEmpresa) {
-                const listaEmpresas = empresas.map((item) => item.razonSocial);
-                let index = listaEmpresas.indexOf(existeEmpresa.razonSocial);
-                empresas.splice(index,1);
-                alert(`Empresa ${existeEmpresa.razonSocial} fue eliminada con éxito de la base de datos`);
-            } else {
-                alert("Empresa no encontrada");
-            }
+if (empresas) {
+    let cont = 1;
+    empresas.forEach(empresa => {
+        let ficha = document.createElement("div");
+        ficha.className="fichaEmpresas";
+        ficha.innerHTML = `
+            <h1>${cont}
+            <h2>RUT: ${empresa.rut}</h2>
+            <h3>Razon Social: ${empresa.razonSocial}</h3>
+            <h3>Tipo de Empresa: ${empresa.tipoEmpresa}</h3>
+        `;
+        cont++;
+        listaEmpresas.append(ficha);
+    });
+} else {
+    let seccion = document.getElementById("listaEmpresas");
+    seccion.innerHTML = "Sin Empresas Registradas hasta el momento";
+};
 
-            if (empresas.length==0) {
-                empresaCreada = false;
-            }
-            break;
-        case "6":
-            salir=true;
-            alert(`Hasta pronto!`);
-            break;
-        default:
-            alert(`Opción Ingresada NO es válida!, intentalo de nuevo`);
-            break;
-    } 
-} while (salir==false);
+const cerrarSesion = () => {
+    sessionStorage.clear();
+    location. reload();
+}
 
+let logOut = document.getElementById("salir");
+logOut.addEventListener("click", () => cerrarSesion());
 
+let formulario = document.getElementById("formulario");
+formulario.addEventListener("submit", (e) => {
+    e.preventDefault();
+    
+    let inputs = e.target;
+    const nuevaEmpresa = new Empresa(
+        {
+            rut: inputs[0].value, 
+            razonSocial: inputs[1].value, 
+            industria: inputs[2].value, 
+            direccion: inputs[3].value,
+            run: inputs[4].value,
+            nombreRepLegal: inputs[5].value,
+            contacto: inputs[6].value,
+            volumen: inputs[7].value
+        }
+    )
+    empresas.push(nuevaEmpresa);
+    localStorage.clear();
+    localStorage.setItem("empresas", JSON.stringify(empresas));
 
-/*FUNCIONES DEL CÓDIGO*/
+    renderizar(empresas);
+    formulario.reset();
+});
+
+//FUNCIONES DEL CÓDIGO
+
 function clasificar(volumen) {
     /*Funcion que clasifica al cliente, segun el volumen de pedidos que se compromete a entregarnos*/
     if (volumen<=100) {
@@ -174,18 +169,15 @@ function clasificar(volumen) {
     if (volumen<=1000) {
         return "Pequeña Empresa";
     }
-
     if (volumen<=5000) {
         return "Mediana Empresa";
     }
-
     if (volumen<=20000) {
         return "Empresa Grande";
     } else {
         return "Empresa Nacional";
     }
 }
-
 function calcularTarifaNeta(tipoCliente) {
     /*FUNCIÓN QUE RETORNA EL TARIFARIO NETO DE UN CLIENTE*/
     switch (tipoCliente) {
@@ -206,7 +198,40 @@ function calcularTarifaNeta(tipoCliente) {
             break;
     }
 }
-
 function tarifaIvaIncluido(tarifaBase) {
     return tarifaBase * (1 + iva);
 }
+
+const validarCI = (rut) => {
+    rut = rut.replaceAll(".", "");
+    rut = rut.replaceAll(",", "");
+    rut = rut.replaceAll("-", "");
+
+    if (rut.length == 8) {
+        rut = rut.substring(0, 1) + "." + rut.substring(1,4) + "." + rut.substring(4,7) + "-" + rut.substring(7,8);
+        return rut;
+    } else if (rut.length == 9) {
+        rut = rut.substring(0, 2) + "." + rut.substring(2,5) + "." + rut.substring(5,8) + "-" + rut.substring(8,9);
+        return rut;
+    } else {
+        return "NAN";
+    };
+};
+
+const renderizar = (empresas) => {
+    let contendorEmpresas = document.getElementById("listaEmpresas");
+    contendorEmpresas.innerHTML="";
+    let cont = 1;
+    empresas.forEach(empresa => {
+        let ficha = document.createElement("div");
+        ficha.className="fichaEmpresas";
+        ficha.innerHTML = `
+            <h1>${cont}
+            <h2>RUT: ${empresa.rut}</h2>
+            <h3>Razon Social: ${empresa.razonSocial}</h3>
+            <h3>Tipo de Empresa: ${empresa.tipoEmpresa}</h3>
+        `;
+        cont++;
+        listaEmpresas.append(ficha);
+    });
+};

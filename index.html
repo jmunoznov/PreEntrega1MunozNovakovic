@@ -3,14 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>99minutos Chile</title>
+    <link rel="stylesheet" href="styles.css">
+    <title>Transportes JMN</title>
 </head>
 <body>
     <header>
-        
+        <nav class="navBar">
+            <p id="saludo"></p>
+            <button id="salir">Cerrar Sesion</button>
+        <nav>
     </header>
-    <main>
+    <main id="main">
+        <h1>Registro de Nueva Empresa</h1>
+        <form class="formulario" id="formulario">
+            <div class="itemFormulario">
+                <label for="inputRut">RUT: </label>
+                <input id="inputRut" type="text" placeholder="11.111.111-1">
+            </div>
+            <div class="itemFormulario">
+                <label for="inputrazonSocial">Razón Social: </label>
+                <input id="inputrazonSocial" type="text" placeholder="Kokuko SPA">
+            </div>
+            <div class="itemFormulario">
+                <label for="inputIndustria">Tipo de Industria: </label>
+                <input id="inputIndustria" type="text" placeholder="Cosméticos/Retail/Botillería/Etc.">
+            </div>
+            <div class="itemFormulario">
+                <label for="inputDireccion">Dirección: </label>
+                <input id="inputDireccion" type="text" placeholder="Av./Calle/Psje. Nombre Calle Nro., Comuna, Ciudad">
+            </div>
+            <div class="itemFormulario">
+                <label for="inputRun">RUN Rep. Legal: </label>
+                <input id="inputRun" type="text" placeholder="11.111.111-1">
+            </div>
+            <div class="itemFormulario">
+                <label for="inputRepLegal">Nombre Representante Legal: </label>
+                <input id="inputRepLegal" type="text" placeholder="Jorge Muñoz N.">
+            </div>
+            <div class="itemFormulario">
+                <label for="inputEmail">Email del Rep. Legal: </label>
+                <input id="inputEmail" type="email" placeholder="correo@ejemplo.cl">
+            </div>
+            <div class="itemFormulario">
+                <label for="inputVolumen">Volumen Comprometido: </label>
+                <input id="inputVolumen" type="text" placeholder="Cantidad de Pedidos Mensuales)">
+            </div>
         
+            <input type="submit" value="Registar Empresa"> 
+        </form>
+        <h2>Listado de Empresas Registrados</h2>
+        <section class="contSellers" id="listaEmpresas"></section>
     </main>
     <footer>
 
